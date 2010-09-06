@@ -1,0 +1,61 @@
+<?php
+
+#doc
+#	classname:	{name}
+#	scope:		PUBLIC
+#
+#/doc
+
+class {name} extends Controller
+{
+	#	internal variables
+	var ${models};
+	#	Constructor
+	function __construct (  )
+	{
+		$this->useModel('{model}');
+	}
+	###	
+	
+	function show ( )
+	{
+		$id = $_GET['id'];
+		$this->{model}->find($id);
+	}
+	
+	function listAll ( )
+	{
+		$this->{models} = $this->{model}->findAll();
+	}
+	
+	function create ( )
+	{
+		if(isset($_POST['name'])){
+			$this->{model}->name = $_POST['name'];
+			$this->{model}->save();
+			RoutingEngine::getInstance()->redirect('{model}','show',$this->{model}->id);
+			$this->flash('New {model} created');
+		}
+	}
+	
+	function delete ( )
+	{
+		$this->{model}->find($_GET['id']);
+		$this->{model}->delete();
+		RoutingEngine::getInstance()->redirect('{model}','listAll');
+	}
+	
+	public function edit ()
+	{
+		$this->{model}->find($_GET['id']);
+		if($_POST['action']=='update'){
+			$this->{model}->name = $_POST['name'];
+			$this->{model}->save();
+			RoutingEngine::getInstance()->redirect('{model}','show',$this->{model}->id);
+		}
+	}
+
+}
+###
+
+?>

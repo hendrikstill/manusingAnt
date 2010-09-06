@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<project name="manusing" default="main" basedir=".">
+	<taskdef classname="net.bluecow.googlecode.ant.GoogleCodeUploadTask" classpath="lib/ant-googlecode-0.0.2.jar" name="gcupload" />
+
+	<!-- Sets variables which can later be used. -->
+	<!-- The value of a property is accessed via ${} -->
+	<property name="build.dir" location="build" />
+	<property name="dist.dir" location="dist" />
+	<property name="docs.dir" location="docs" />
+	<property name="php.bin" location="C:\\xampplite\\php\\php.exe" />
+	<property name="phpdoc.inc" location="./lib/PhpDocumentor/phpdoc" />
+	<property name="manusing.dir" location="../manusing" />
+
+	<!-- Deletes the existing build, docs and dist directory-->
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+		<delete dir="${docs.dir}" />
+	</target>
+
+	<!-- Creates the  build, docs and dist directory-->
+	<target name="makedir">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${docs.dir}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+
+	<target name="copy">
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+		<copy todir="${build.dir}/lib">
+			<fileset dir="${manusing.dir}/lib">
+			</fileset>
+		</copy>
+		<copy todir="${build.dir}/plugins">
+			<fileset dir="${manusing.dir}/plugins">
+			</fileset>
+		</copy>
+		<copy todir="${build.dir}/scaffolding">
+			<fileset dir="${manusing.dir}/scaffolding">
+			</fileset>
+		</copy>
+		<mkdir dir="${build.dir}/controller" />
+		<mkdir dir="${build.dir}/model" />
+		<mkdir dir="${build.dir}/views" />
+		<copy file="${manusing.dir}/config.php" todir="${build.dir}" />
+		<copy file="${manusing.dir}/index.php" todir="${build.dir}" />
+		<copy file="${manusing.dir}/.htaccess" todir="${build.dir}" />
+	</target>
+
+	<target name="zip" depends="copy">
+		<delete dir="${dist.dir}" />
+		<mkdir dir="${dist.dir}" />
+		<zip basedir="${build.dir}" destfile="${dist.dir}/manusing.zip" />
+	</target>
+
+	<target name="doc" depends="copy">
+		<delete dir="${docs.dir}" />
+		<mkdir dir="${docs.dir}" />
+		<exec executable="${php.bin}">
+			<arg value="${phpdoc.inc}" />
+			<arg value="-t" />
+			<arg value="${docs.dir}" />
+			<arg value="-d" />
+			<arg value="${build.dir}" />
+			<arg value="-ti" />
+			<arg value="Manusing" />
+			<arg value="-q" />
+			<arg value="-dn" />
+			<arg value="Lib" />
+			<arg value="-o" />
+			<arg value="HTML:Smarty:php" />
+		</exec>
+	</target>
+
+	<target name="main" depends="doc,zip">
+		<description>Main target</description>
+	</target>
+
+</project>

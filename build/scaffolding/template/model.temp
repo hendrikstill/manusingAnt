@@ -1,0 +1,34 @@
+<?php
+
+#doc
+#	classname:	{model}
+#	scope:		PUBLIC
+#
+#/doc
+
+class {model} extends Model
+{
+	#	internal variables
+		var $attributes = array(
+							array('id','INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY'),
+							array('name','VARCHAR(255)'),
+							array('value','VARCHAR(255)'),
+							);
+
+		//var $belongsTo = 'Job';
+
+
+
+		var $table = '{model}';
+	
+	#	Constructor
+	function __construct (  )
+	{
+		# code...
+	}
+	###	
+
+}
+###
+
+?>
